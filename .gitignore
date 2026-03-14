@@ -1,12 +1,44 @@
 # ==============================================================================
-# PINEAPPLE CHAOS PLATFORM - 国内云定制版 .gitignore
-# 防护目标: 腾讯云[备案入口] | 京东云[混沌控制] | 火山云[监控]
-# 海外节点: AWS东京 | Azure韩国
+# PINEAPPLE CHAOS PLATFORM - 终极安全版 .gitignore
+# 防护目标: 腾讯云(备案) | Azure(API网关) | AWS(数据) | 京东云(混沌) | 火山云(监控)
+# 特殊配置: SSH端口37291 | 双备案域名 | 跨国混合云
 # ==============================================================================
 
-# === 0. 绝对禁区 - 国内云厂商凭证 (按厂商分类) ===
+# === 0. 绝对禁区 - 服务器真实IP（脱敏核心）===
+# 所有节点公网IP（永不提交）
+*_ip.txt
+*_ip_list.txt
+hosts.ini
+inventory/
+ansible.cfg
+.terraform.tfvars
 
-# 【腾讯云】Tencent Cloud - 境内入口节点
+# 占位符提醒（提交前检查）
+# 正确的: [腾讯云] [Azure] [AWS] [京东云] [火山云]
+# 错误的: 49.235.x.x 20.196.x.x 18.182.x.x 36.151.x.x 115.190.x.x
+
+# === 1. SSH与远程连接（端口37291）===
+# 所有SSH密钥（无论哪个节点）
+*.pem
+*.key
+*.pub
+id_rsa*
+id_ed25519*
+id_ecdsa*
+id_dsa*
+known_hosts
+authorized_keys
+*.ppk
+.ssh/
+ssh_config
+
+# 特殊端口配置（37291为非标准SSH端口）
+*.port37291.config
+ssh_37291.conf
+
+# === 2. 国内云厂商凭证（按厂商分类）===
+
+# 【腾讯云】备案入口节点（pineapple-user.site）
 .tencent/
 tccli/
 ~/.tccli/
@@ -17,11 +49,10 @@ SecretId.txt
 SecretKey.txt
 *secret_id*
 *secret_key*
-# 腾讯云CAM凭证（特别注意：腾讯云的SecretKey泄露后无法撤销，必须重新生成）
 *.tencentcloudapi.com.key
 qcloudcli/
 
-# 【京东云】JD Cloud - 混沌控制节点
+# 【京东云】混沌控制节点（pine-server.store）
 .jdcloud/
 jdc/
 ~/.jdc/
@@ -31,9 +62,8 @@ jdc-config.yaml
 jdc_credentials
 jdcloud_access_key
 jdcloud_secret_key
-# 京东云有特殊的JDC CLI配置文件
 
-# 【火山云】Volcano Engine - 监控/逃生节点  
+# 【火山云】监控/逃生节点
 .volc/
 volcengine/
 ~/.volc/
@@ -45,7 +75,7 @@ sk.*.txt
 volc_access_key_id
 volc_secret_access_key
 
-# 【通用国内云】阿里云/华为云 (防止误配置)
+# 【通用国内云】阿里云/华为云（防止误配置）
 .aliyun/
 aliyuncli/
 ~/.aliyun/
@@ -55,20 +85,25 @@ aliyuncli/
 hcloud/
 ~/.hcloud/
 
-# 【海外云】保留但严格限制
-# AWS (东京节点)
+# === 3. 海外云厂商凭证 ===
+
+# 【AWS】东京节点（PostgreSQL+Harbor）
 .aws/
 aws-credentials*.csv
 *accessKeys*.csv
 .aws-credentials
-# Azure (韩国节点)  
+.aws/config
+.aws/credentials
+
+# 【Azure】韩国节点（FastAPI网关）
 .azure/
 azcli-*.txt
 *azureAuth.json
 .azure-msal-token-cache.json
 
-# === 1. 基础设施即代码 (IaC) - 含5节点IP和密钥 ===
-# Terraform (状态文件含明文密码和服务器IP)
+# === 4. 基础设施即代码 (IaC) - 含5节点配置 ===
+
+# Terraform（状态文件含服务器IP）
 *.tfstate
 *.tfstate.*
 **/.terraform/*
@@ -76,105 +111,371 @@ azcli-*.txt
 *.tfvars
 *.auto.tfvars
 !terraform.tfvars.example
-# 特别注意：terraform.tfstate会记录腾讯云CVM的root密码！
+terraform.tfplan
+crash.log
+crash.*.log
+override.tf
+*_override.tf
+.terraformrc
+terraform.rc
 
-# Ansible (5台主机清单)
+# Pulumi
+Pulumi.*.yaml
+!Pulumi.example.yaml
+
+# Ansible（5台主机清单）
 *.retry
 inventory/
-hosts.ini
 host_vars/
 group_vars/
 !inventory/example/
 !group_vars/all.example.yml
 
-# === 2. Docker与容器安全 (Harbor镜像仓库) ===
-# 本地数据卷 (含PostgreSQL/Harbor数据)
+# === 5. Docker与容器安全（Harbor镜像仓库）===
+
+# 本地数据卷（含PostgreSQL/Harbor生产数据）
 volumes/
 postgres_data/
 redis_data/
 harbor_data/
 docker-registry/
+mysql_data/
+mongo_data/
+elastic_data/
 
-# Docker Compose (含真实内网IP)
+# Docker Compose（含真实内网IP）
 docker-compose.override.yml
 docker-compose.prod.yml
+docker-compose.staging.yml
 !docker-compose.yml
 !docker-compose.example.yml
 
-# 容器镜像导出
+# Docker认证与配置（含registry密码）
+.docker/
+docker-config.json
+config.json
+*.dockercfg
+registry-auth/
+htpasswd
+
+# 容器镜像导出（巨大且含敏感层）
 *.tar
 *.tar.gz
+*.tgz
 container-images/
+docker-images/
+saved-images/
 
-# === 3. 应用配置与密钥 ===
-# 环境变量 (所有变体)
+# Kubernetes（如果有扩展）
+kubeconfig
+kubeconfig.yaml
+*.kubeconfig
+.kube/
+
+# === 6. 应用配置与密钥 ===
+
+# 环境变量（所有变体）
 .env
 .env.*
 .env.local
 .env.production
+.env.staging
+.envrc
+*.env
 !.env.example
+!.env.template
 
-# 配置文件
+# 配置文件（真实）
 config.yaml
+config.yml
 config.json
+config.toml
+settings.yaml
+settings.json
 secrets.yaml
+secrets.yml
 !config.yaml.example
+!config.example.yml
+!settings.template.json
 
-# 证书与SSH密钥 (5台服务器的)
-*.pem
-*.key
-id_rsa*
-id_ed25519*
-known_hosts
-.ssh/
-*.pub
+# 证书（SSL/TLS）
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
 
+# === 7. 备案与合规敏感信息（中国特色）===
 
-# === 4. 备案与合规敏感信息 (中国特色) ===
-# 备案信息 (防止爬虫)
+# 备案信息（防止爬虫和恶意举报）
 icp.txt
 beian.txt
+备案.txt
 *.备案
 备案号.txt
-
-# 域名实名认证 (腾讯云要求)
+domain-record.txt
 实名认证/
-domain-realname-auth/
-real-name-verify/
+实名认证.*
+real-name-auth/
+domain-realname-verify/
 
-# === 5. 数据库与日志 ===
+# 域名与DNS（含真实解析记录）
+domains.txt
+dns-records.json
+cloudflare.ini
+cloudflare.cfg
+dns-api-key.txt
+
+# === 8. 数据库（生产数据绝对禁止）===
+
+# 数据库备份（含敏感数据）
 *.dump
 *.backup
+*.pcap
+*.pcapng
+pg_dump/
+backups/
+!init.sql
+!schema.sql
+!seeds.sql
+!migrations/*.sql
+
+# SQLite本地开发
+*.db
+*.sqlite
+*.sqlite3
+
+# === 9. 日志与监控（含IP和访问模式）===
+
+# 日志文件
 *.log
+*.logs
 logs/
+log/
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 监控数据（可能暴露架构规模）
 prometheus/data/
-*.pcap  # 抓包文件含敏感流量
+thanos/
+alertmanager/data/
+grafana-storage/
+influxdb-data/
+elastic-data/
+grafana/dashboards/*.json.bak
 
-# === 6. 混沌工程敏感数据 ===
+# 抓包文件（含敏感流量）
+抓包/
+captures/
+tcpdump/
+
+# === 10. 混沌工程与测试（含攻击脚本）===
+
+# 实验报告（含真实故障信息）
 chaos-reports/
-experiments/logs/
+chaos-experiments/logs/
+experiment-results/
 fault-injection.log
+resilience-test-data/
 
-# === 7. Python/Node开发环境 ===
+# 压力测试数据（可能暴露系统瓶颈）
+load-test-results/
+benchmark-data/
+performance-logs/
+
+# === 11. Python开发环境（FastAPI）===
+
+# Python缓存
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
 .venv/
 venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+.python-version
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 测试与覆盖率
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+cython_debug/
+
+# === 12. Node/Vue前端开发环境 ===
+
+# 依赖
 node_modules/
 dist/
+dist-ssr/
+*.local
+.vite/
+.next/
+.nuxt/
+.cache/
+.vuepress/dist
+.docusaurus/
+.build/
+coverage/
 
-# === 8. IDE与系统文件 ===
+# TypeScript
+*.tsbuildinfo
+
+# === 13. IDE与编辑器 ===
+
+# JetBrains
 .idea/
-.vscode/
-.DS_Store
-Thumbs.db
+*.iml
+*.ipr
+*.iws
+out/
+
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+# Vim/Emacs
 *.swp
+*.swo
+*~
+.*.swp
+.*.swo
+.*~
+*.tmp
+\#*\#
+.\#*
+
+# Cursor
+.cursorignore
+.cursor/
+
+# === 14. CI/CD与自动化 ===
+
+# GitHub Actions本地测试
+.github/workflows/*-local.yml
+.github/workflows/*-private.yml
+.secrets
+secrets/
+vault-password.txt
+.ansible-vault/
+*.vault
+
+# === 15. 文档与临时文件 ===
+
+# 临时文件
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+*.rej
+*.save
+*.old
+
+# 压缩包
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# 文档生成（可能含截图中的IP）
+site/
+docs/_build/
+docs/site/
+apidoc/
+swagger.json
+
+# === 16. 移动与桌面应用 ===
+
+# Android
+*.apk
+*.ap_
+*.dex
+local.properties
+
+# iOS
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# === 17. 大数据与AI（如果用到）===
+
+# 模型文件（巨大）
+*.pkl
+*.pth
+*.h5
+*.onnx
+*.pb
+models/
+checkpoints/
+
+# 数据集（可能含隐私）
+data/raw/
+data/processed/
+datasets/
 
 # ==============================================================================
-# 例外规则 - 显式允许示例文件
+# 例外规则 - 显式允许示例文件（必须放在最后）
 # ==============================================================================
+
 !.env.example
+!.env.template
 !config.yaml.example
 !docker-compose.example.yml
+!terraform.tfvars.example
 !README.md
 !LICENSE
+!ARCHITECTURE.md
+
+# 允许架构图（前提是已脱敏）
+!docs/images/architecture*.png
+!docs/images/*.svg
+
+# 允许CI配置（不含secrets）
+!.github/workflows/*.yml
+!gitlab-ci.yml
+
+# 允许基础设施模板（不含真实值）
+!terraform/*.tf
+!ansible/playbooks/*.yml
+!k8s/*.yaml
