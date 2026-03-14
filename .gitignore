@@ -1,308 +1,178 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[codz]
-*$py.class
+# ==============================================================================
+# PINEAPPLE CHAOS PLATFORM - 国内云定制版 .gitignore
+# 防护目标: 腾讯云[备案入口] | 京东云[混沌控制] | 火山云[监控]
+# 海外节点: AWS东京 | Azure韩国
+# ==============================================================================
 
-# C extensions
-*.so
+# === 0. 绝对禁区 - 国内云厂商凭证 (按厂商分类) ===
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+# 【腾讯云】Tencent Cloud - 境内入口节点
+.tencent/
+tccli/
+~/.tccli/
+*.tccli.conf
+tccli.conf
+credential.ini
+SecretId.txt
+SecretKey.txt
+*secret_id*
+*secret_key*
+# 腾讯云CAM凭证（特别注意：腾讯云的SecretKey泄露后无法撤销，必须重新生成）
+*.tencentcloudapi.com.key
+qcloudcli/
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# 【京东云】JD Cloud - 混沌控制节点
+.jdcloud/
+jdc/
+~/.jdc/
+jdc-conf/
+*.jdc.config
+jdc-config.yaml
+jdc_credentials
+jdcloud_access_key
+jdcloud_secret_key
+# 京东云有特殊的JDC CLI配置文件
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# 【火山云】Volcano Engine - 监控/逃生节点  
+.volc/
+volcengine/
+~/.volc/
+volccli/
+*.volc.config
+volc-credentials
+ak.*.txt
+sk.*.txt
+volc_access_key_id
+volc_secret_access_key
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py.cover
-.hypothesis/
-.pytest_cache/
-cover/
+# 【通用国内云】阿里云/华为云 (防止误配置)
+.aliyun/
+aliyuncli/
+~/.aliyun/
+*.aliyun.config
+.aliyuncs/
+.huaweicloud/
+hcloud/
+~/.hcloud/
 
-# Translations
-*.mo
-*.pot
+# 【海外云】保留但严格限制
+# AWS (东京节点)
+.aws/
+aws-credentials*.csv
+*accessKeys*.csv
+.aws-credentials
+# Azure (韩国节点)  
+.azure/
+azcli-*.txt
+*azureAuth.json
+.azure-msal-token-cache.json
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
+# === 1. 基础设施即代码 (IaC) - 含5节点IP和密钥 ===
+# Terraform (状态文件含明文密码和服务器IP)
+*.tfstate
+*.tfstate.*
+**/.terraform/*
+.terraform.lock.hcl
+*.tfvars
+*.auto.tfvars
+!terraform.tfvars.example
+# 特别注意：terraform.tfstate会记录腾讯云CVM的root密码！
 
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-.pybuilder/
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# UV
-#   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#uv.lock
-
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
-#poetry.toml
-
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#   pdm recommends including project-wide configuration in pdm.toml, but excluding .pdm-python.
-#   https://pdm-project.org/en/latest/usage/project/#working-with-version-control
-#pdm.lock
-#pdm.toml
-.pdm-python
-.pdm-build/
-
-# pixi
-#   Similar to Pipfile.lock, it is generally recommended to include pixi.lock in version control.
-#pixi.lock
-#   Pixi creates a virtual environment in the .pixi directory, just like venv module creates one
-#   in the .venv directory. It is recommended not to include this directory in version control.
-.pixi
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.envrc
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
-# Abstra
-# Abstra is an AI-powered process automation framework.
-# Ignore directories containing user credentials, local state, and settings.
-# Learn more at https://abstra.io/docs
-.abstra/
-
-# Visual Studio Code
-#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
-#  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
-#  you could uncomment the following to ignore the entire vscode folder
-# .vscode/
-
-# Ruff stuff:
-.ruff_cache/
-
-# PyPI configuration file
-.pypirc
-
-# Cursor
-#  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
-#  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
-#  refer to https://docs.cursor.com/context/ignore-files
-.cursorignore
-.cursorindexingignore
-
-# Marimo
-marimo/_static/
-marimo/_lsp/
-__marimo__/
-
-# === Node/Vue部分===
-node_modules/
-dist/
-dist-ssr/
-*.local
-.vite/
-coverage/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# === 脱敏专用===
-# 服务器敏感信息
-*_ip.txt
-*_key.pem
-.ssh/
-hosts.ini
+# Ansible (5台主机清单)
+*.retry
 inventory/
-ansible.cfg
+hosts.ini
+host_vars/
+group_vars/
+!inventory/example/
+!group_vars/all.example.yml
 
-# 备案信息（防爬虫）
-icp.txt
-beian.txt
-*.备案
-# 数据库
-*.sql
-*.dump
-*.backup
-
-# 配置文件（真实）
-config.yaml
-config.json
-!config.yaml.example
-!config.json.example
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# === Docker与容器安全 ===
-# 本地Docker卷（可能包含数据库数据）
+# === 2. Docker与容器安全 (Harbor镜像仓库) ===
+# 本地数据卷 (含PostgreSQL/Harbor数据)
 volumes/
 postgres_data/
 redis_data/
 harbor_data/
+docker-registry/
 
-# Docker Compose覆盖文件（可能包含真实IP）
+# Docker Compose (含真实内网IP)
 docker-compose.override.yml
+docker-compose.prod.yml
 !docker-compose.yml
 !docker-compose.example.yml
 
-# 容器镜像tar包（巨大且含敏感层信息）
+# 容器镜像导出
 *.tar
 *.tar.gz
-images/
+container-images/
 
-# ===基础设施即代码(IaC) - 关键！===
-# Terraform状态文件（包含服务器IP、密钥ID）
-*.tfstate
-*.tfstate.*
-.terraform/
-.terraform.lock.hcl
-terraform.tfvars
-!terraform.tfvars.example
+# === 3. 应用配置与密钥 ===
+# 环境变量 (所有变体)
+.env
+.env.*
+.env.local
+.env.production
+!.env.example
 
-# Ansible（如果你有playbook）
-*.retry
-group_vars/
-host_vars/
-!group_vars/all.example.yml
+# 配置文件
+config.yaml
+config.json
+secrets.yaml
+!config.yaml.example
 
-# === SSH密钥明确化 ===
+# 证书与SSH密钥 (5台服务器的)
 *.pem
 *.key
 id_rsa*
 id_ed25519*
 known_hosts
-authorized_keys
+.ssh/
 
-# === 项目特定 ===
-# Vue3前端构建
-frontend/dist/
-ui/dist/
+# === 4. 备案与合规敏感信息 (中国特色) ===
+# 备案信息 (防止爬虫)
+icp.txt
+beian.txt
+*.备案
+备案号.txt
 
-# 混沌工程实验报告
+# 域名实名认证 (腾讯云要求)
+实名认证/
+domain-realname-auth/
+real-name-verify/
+
+# === 5. 数据库与日志 ===
+*.dump
+*.backup
+*.log
+logs/
+prometheus/data/
+*.pcap  # 抓包文件含敏感流量
+
+# === 6. 混沌工程敏感数据 ===
 chaos-reports/
 experiments/logs/
-*.pcap  # 抓包文件（可能含敏感流量）
+fault-injection.log
 
-# 监控数据导出（可能含真实服务器指标）
-grafana/dashboards/*.json.bak
-prometheus/data/
+# === 7. Python/Node开发环境 ===
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+dist/
+
+# === 8. IDE与系统文件 ===
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+
+# ==============================================================================
+# 例外规则 - 显式允许示例文件
+# ==============================================================================
+!.env.example
+!config.yaml.example
+!docker-compose.example.yml
+!README.md
+!LICENSE
