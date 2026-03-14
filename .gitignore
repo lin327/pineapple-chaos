@@ -252,3 +252,57 @@ config.json
 # OS
 .DS_Store
 Thumbs.db
+
+# === Docker与容器安全 ===
+# 本地Docker卷（可能包含数据库数据）
+volumes/
+postgres_data/
+redis_data/
+harbor_data/
+
+# Docker Compose覆盖文件（可能包含真实IP）
+docker-compose.override.yml
+!docker-compose.yml
+!docker-compose.example.yml
+
+# 容器镜像tar包（巨大且含敏感层信息）
+*.tar
+*.tar.gz
+images/
+
+# ===基础设施即代码(IaC) - 关键！===
+# Terraform状态文件（包含服务器IP、密钥ID）
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+!terraform.tfvars.example
+
+# Ansible（如果你有playbook）
+*.retry
+group_vars/
+host_vars/
+!group_vars/all.example.yml
+
+# === SSH密钥明确化 ===
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+known_hosts
+authorized_keys
+
+# === 项目特定 ===
+# Vue3前端构建
+frontend/dist/
+ui/dist/
+
+# 混沌工程实验报告
+chaos-reports/
+experiments/logs/
+*.pcap  # 抓包文件（可能含敏感流量）
+
+# 监控数据导出（可能含真实服务器指标）
+grafana/dashboards/*.json.bak
+prometheus/data/
