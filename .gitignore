@@ -205,3 +205,50 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# === Node/Vue部分===
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === 脱敏专用===
+# 服务器敏感信息
+*_ip.txt
+*_key.pem
+.ssh/
+hosts.ini
+inventory/
+ansible.cfg
+
+# 备案信息（防爬虫）
+icp.txt
+beian.txt
+*.备案
+# 数据库
+*.sql
+*.dump
+*.backup
+
+# 配置文件（真实）
+config.yaml
+config.json
+!config.yaml.example
+!config.json.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
